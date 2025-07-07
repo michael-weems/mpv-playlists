@@ -1,6 +1,6 @@
 # Video Playlist CLI
 
-A simple ClI tool to generate playlists from directories and save off configuration options for playing videos via `mpv`. Written in `python` specifically so my buddy can understand it.
+A simple CLI tool to generate playlists from directories and save off configuration options for playing videos via `mpv`. Written in `python` specifically so my buddy can understand it.
 
 There are two components to this: downloading and playlist management. `dl` is a convenience bash-script for downloading videos. `play.py` is a convenience python script for running `mpv` with your own configuration options.
 
