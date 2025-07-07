@@ -1,0 +1,99 @@
+#!/bin/bash
+
+RED="\e[0;31m"
+GREEN="\e[0;32m"
+YELLOW="\e[0;33m"
+PURPLE="\e[0;35m"
+RESET="\e[0m"
+
+function fail() {
+	echo -e "${RED} fail >>${RESET} $1"
+}
+function warn() {
+	echo -e "${YELLOW} warn >>${RESET} $1"
+}
+function wait_for() {
+	echo -e "${PURPLE}󰚭 wait >>${RESET} $1"
+}
+function finn() {
+	echo -e "${GREEN}󰸞 done >>${RESET} $1"
+}
+
+filename="$1"
+
+mkdir -p .logs
+
+err="false"
+problems="${filename}-problems"
+
+# NOTE: prepare / validate inputs
+ln=0
+len=0
+outs=()
+urls=()
+while IFS="" read -r line || [ -n "$line" ]
+do
+	ln=$((ln+1))
+
+	out=$(echo "$line" | awk -F"," '{ print $1 }')
+	url=$(echo "$line" | awk -F"," '{ print $2 }')
+
+	if [[ -z "$out" ]]; then
+		err="true"
+		error "line $count: no output file specified, please include an output folder"
+		echo "$line" &>> "$problems"
+		echo "appended to file: $problems"
+		continue	
+	fi
+	if [[ -z "$url" ]]; then
+		err="true"
+		error "line $count: no url specified, please include a url"
+		echo "$line" &>> "$problems"
+		echo "appended to file: $problems"
+		continue	
+	fi
+	outs+=("$out")
+	urls+=("$url")
+	len=$((len+1))
+done < "$filename"
+
+if [[ "$err" == "true" ]]; then
+	diff=$((ln - len))
+	warn "processing $len out of $ln entries"
+fi
+
+rm -fr .logs
+mkdir -p .logs
+
+# NOTE: actually do processing
+for ((i=0;i<len;i++)); do
+	wait_for "wait a few seconds..."
+	sleep 3
+
+	out="${outs[$i]}"
+	url="${urls[$i]}"
+	mkdir -p $(dirname "$out")
+	wait_for "yt-dlp -f bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best -o $out.%(ext)s $url"
+	yt-dlp -f "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best" -o "$out.%(ext)s" "$url" 1> /dev/null 2>> .logs/errors.log
+	if [ $? != 0 ]; then
+		fail "download $url to ${out}.(ext)"
+		echo "download $url to ${out}.(ext)" >> .logs/errors.log
+		continue
+	fi
+
+	finn "wrote ${out}.(ext)"
+done
+
+if [ -f .logs/errors.log ] && [ -s .logs/errors.log ]; then
+	cat .logs/errors.log
+	fail "did not download everything in $filename"
+	exit 1
+fi
+
+if [ -f "$problems" ]; then
+	warn "please fix the issues in $problems and retry those entries"
+fi
+
+rm -fr .logs
+
+finn "complete"
