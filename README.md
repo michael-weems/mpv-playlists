@@ -70,3 +70,15 @@ Run the `dl` script like below:
 ```
 
 Read the script output to check for failures / successes.
+
+### Resolution conversion
+
+Create a directory containing all the mp4 files you wish to downscale to 720p. It can contain as many nested folders as you wish, the conversion script will respect this.
+
+```bash
+./to720p path/to/your/videos/dir 
+# outputs videos to 'path/to/your/videos/dir-720p'
+```
+> If a file cannot be converted, it will instead just copy the original.
+
+Read the script output to check for failures / successes.
