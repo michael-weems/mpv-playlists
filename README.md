@@ -1,8 +1,8 @@
 # Video Playlist CLI
 
-A simple CLI tool to generate playlists from directories and save off configuration options for playing videos via `mpv`. Written in `python` specifically so my buddy can understand it.
+A simple CLI tool to generate playlists from directories and save off configuration options for playing videos via `mpv`. Written in `python` specifically so my buddy can understand it. But also some `bash` because why not.
 
-There are two components to this: downloading and playlist management. `dl` is a convenience bash-script for downloading videos. `play.py` is a convenience python script for running `mpv` with your own configuration options.
+There are a few components to this: downloading and playlist management. `dl` is a convenience bash-script for downloading videos. `play.py` is a convenience python script for running `mpv` with your own configuration options. `to720p` take a directory of mp4 videos (videos), and outputs a directory of those videos converted to 720p (videos-720p).
 
 ## Installation
 
@@ -12,6 +12,9 @@ For downloading, make sure you install:
 For playlist management, please make sure to install:
 - [python v3.13+](https://www.python.org/downloads/)
 - [mpv](https://mpv.io/installation/)
+
+For converting resolution, make sure you install: 
+- [ffmpeg](https://ffmpeg.org/download.html)
 
 ## Usage
 
