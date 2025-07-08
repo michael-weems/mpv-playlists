@@ -10,6 +10,7 @@ def defaults():
 	c = {
 		"shuffle": False,
 		"fullscreen": False,
+		"performance": False,
 	}
 	return c
 
@@ -59,6 +60,9 @@ def parse_args():
 			i = i + 1
 			out = sys.argv[i]
 			log.verbose(f"[arg] output config to: {out}")
+		elif sys.argv[i] == "--performance":
+			config["performance"] = True
+			log.verbose(f"[arg] performance: True")
 		elif sys.argv[i] == "--shuffle":
 			config["shuffle"] = True
 			log.verbose(f"[arg] shuffle: True")
@@ -115,6 +119,9 @@ def build_cmd(playlist, config):
 
 	if config["fullscreen"]:
 		args.append("--fullscreen")
+
+	if config["performance"]:
+		args.append("--profile=fast")
 
 	args.append(playlist)
 
