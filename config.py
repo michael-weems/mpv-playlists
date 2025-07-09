@@ -11,6 +11,7 @@ def defaults():
 		"shuffle": False,
 		"fullscreen": False,
 		"performance": False,
+		"loop": False,
 	}
 	return c
 
@@ -63,6 +64,9 @@ def parse_args():
 		elif sys.argv[i] == "--performance":
 			config["performance"] = True
 			log.verbose(f"[arg] performance: True")
+		elif sys.argv[i] == "--loop":
+			config["loop"] = True
+			log.verbose(f"[arg] loop: True")
 		elif sys.argv[i] == "--shuffle":
 			config["shuffle"] = True
 			log.verbose(f"[arg] shuffle: True")
@@ -122,6 +126,9 @@ def build_cmd(playlist, config):
 
 	if config["performance"]:
 		args.append("--profile=fast")
+
+	if config["loop"]:
+		args.append("--loop-playlist")
 
 	args.append(playlist)
 
