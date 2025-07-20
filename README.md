@@ -82,3 +82,10 @@ Create a directory containing all the mp4 files you wish to downscale to 720p. I
 > If a file cannot be converted, it will instead just copy the original.
 
 Read the script output to check for failures / successes.
+
+## Trim Videos
+
+```bash
+# in 'output.mp4', get the first minute and 15 seconds of input.mp4 and trim the rest
+ffmpeg --ss 00:00:00 -t 00:01:15 -i input.mp4 output.mp4
+```
