@@ -16,13 +16,18 @@ for f in $(find $dir -type f); do
 	dname="${dname#$prefix}"
 	out="${out_dir}/${dname}/${fname}"
 
+	if [ -f "$out" ]; then
+		# NOTE: file already exists, skip it
+		continue
+	fi
+
 	mkdir -p "${out_dir}/${dname}"
 
 	ffmpeg -i "$f" -vf scale=-1:720 -c:v libx264 -crf 18 -preset veryslow -c:a copy "$out" 
 	if [ $? != 0 ]; then
 		rm -fr $out
 		mkdir -p "${out_dir}/${dname}"
-		cp "$f" "$out"
+		cp "$f" "$out" # NOTE: generally, videos should play well. Copy the un-transformed file in-lieue of actually transforming it if it fails
 	fi
 	
 done 
